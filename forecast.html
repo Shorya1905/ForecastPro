@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5 Day Forecast</title>
+  <link rel="stylesheet" href="styles1.css" />
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+  
+<nav class="navbar navbar-expand-lg" style="background-color: #d0cd8f; width: 100%;">
+  <div class="container-fluid d-flex justify-content-between align-items-center px-4">
+    <!-- Left side: Logo and Website Name -->
+    <div class="d-flex align-items-center">
+      <img src="https://assets.onecompiler.app/43a927tw7/43fjnyxq9/ChatGPT%20Image%20Apr%2022,%202025,%2002_28_22%20PM.png" width="40" height="40" class="rounded-circle mr-2" alt="Logo" />
+      <span style="font-family: 'Oxygen Mono', monospace; color: #332b1d; font-size: 20px;">ForecastPro</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="current.html">Current Location</a></li>
+      <li><a href="search.html">Search City</a></li>
+      <li><a href="forecast.html">Forecast</a></li>
+      <li><a href="map.html">Map View</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <h1>5-Day Weather Forecast</h1>
+    <form id="forecast-form">
+      <input type="text" id="forecast-input" placeholder="Enter city name" />
+      <button type="submit">Get Forecast</button>
+    </form>
+    <div id="forecast-result"></div>
+  </main>
+
+  <script>document.getElementById("forecast-form").addEventListener("submit", function (event) {
+  event.preventDefault();
+  const city = document.getElementById("forecast-input").value;
+  fetchForecast(city);
+});
+
+function fetchForecast(city) {
+  const apiKey = "2b5fc755ac2ec59250868b5527df31c4";
+
+  axios.get(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}`)
+    .then(response => {
+      const forecastData = response.data.list;
+      let forecastDetails = "<h2>5-Day Forecast</h2>";
+
+      forecastData.forEach(item => {
+        forecastDetails += `
+          <div>
+            <p>${new Date(item.dt * 1000).toLocaleDateString()}</p>
+            <p>Temperature: ${item.main.temp}°C</p>
+            <p>Weather: ${item.weather[0].description}</p>
+          </div>
+        `;
+      });
+
+      document.getElementById("forecast-result").innerHTML = forecastDetails;
+    })
+    .catch(error => {
+      console.error("Error fetching forecast data:", error);
+    });
+}
+</script>
+</body>
+</html>
